@@ -1,0 +1,14 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>HtmlCleanser</id>
+    <version>$version$</version>
+    <title>HtmlCleanser</title>
+    <authors>Luke Schafer (@lukeschafer)</authors>
+    <owners>Luke Schafer</owners>
+    <projectUrl>https://github.com/lukeschafer/HtmlCleanser</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>HTML Cleaner and Pre-mailer for .Net</description>
+    <tags>HTML premail premailer cleaner htmlagilitypack</tags>
+  </metadata>
+</package>
