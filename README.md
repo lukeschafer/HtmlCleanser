@@ -5,6 +5,8 @@ HTML Cleaner and Pre-mailer for .Net.
 
 Many email clients are strict in regards to what they allow. For example, GMail will not use stylesheets included in the document - only inline styles will be used. To see if your emails pass the test, run them through http://emaillint.com (https://github.com/lukeschafer/emaillint).
 
+Not just for emails. Also good for ensuring clean, dependency free content from CMSs and the like.
+
 This was created a long time ago as an alternative to Premailer.Net (which doesn't work properly!) to solve an actual business need. As of writing, it has been running in production, cleansing hundreds of emails per month, for the last few years. Just got around to open sourcing it :)
 
 ## CI + Nuget
