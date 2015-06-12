@@ -35,7 +35,7 @@ Args:
 
 What it does: 
 * Removes Conditional Comments (leaving content)
-* Inlines CSS from included stylesheets to the style tag of each node
+* Inlines CSS from included stylesheets to the style tag of each node. Applies 'all' and 'screen' media queries
 * Removes External Resource References (stylesheets, javascript etc)
 * Fixes unescaped text in nodes. This could actually cause problems, but it tries to fix them and will more likely fix things than break them (famous last words)
 * Removes 'href' from \<base/\> tag
@@ -52,7 +52,7 @@ Args:
 
 What it does: 
 * Removes Conditional Comments (leaving content)
-* Inlines CSS from included stylesheets to the style tag of each node
+* Inlines CSS from included stylesheets to the style tag of each node. Applies 'all' and 'screen' media queries
 
 ### PartialCleanse
 
