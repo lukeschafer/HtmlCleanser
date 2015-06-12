@@ -38,7 +38,7 @@ What it does:
 * Inlines CSS from included stylesheets to the style tag of each node
 * Removes External Resource References (stylesheets, javascript etc)
 * Fixes unescaped text in nodes. This could actually cause problems, but it tries to fix them and will more likely fix things than break them (famous last words)
-* Removes 'href' from <base/> tag
+* Removes 'href' from \<base/\> tag
 
 ### MoveCssInline
 
