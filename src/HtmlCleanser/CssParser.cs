@@ -67,9 +67,9 @@ namespace HtmlCleanser
         {
             var sc = new StyleClass { Selector = selector };
 
-            var atrs = CleanUp(style).Split(';');
+            var attrs = UnescapeNastyCharacters(CleanUp(style)).Split(';');
 
-            foreach (var a in atrs)
+            foreach (var a in attrs)
             {
                 if (!a.Contains(":")) continue;
                 var key = a.Split(':')[0].Trim();
@@ -79,11 +79,35 @@ namespace HtmlCleanser
                     sc.Attributes.Remove(key);
                 }
 
-                sc.Attributes.Add(key, a.Split(':')[1].Trim().ToLower());
+                var value = a.Split(':')[1].Trim().ToLower();
+                sc.Attributes.Add(key, EscapeNastyCharacters(value));
             }
 
             _parsedStyles.Add(new KeyValuePair<string, StyleClass>(sc.Selector, sc));
             return sc;
+        }
+
+        /// <summary>
+        /// Remove things like quotes
+        /// </summary>
+        protected static string EscapeNastyCharacters(string cssValue)
+        {
+            var noAmpersands = new Regex("&(?!(?:apos|quot|[gl]t|#[0-9]+|amp);)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+            return noAmpersands.Replace(cssValue, "&amp;").Replace("\"", "&quot;").Replace("'", "&#39;");
+        }
+
+        /// <summary>
+        /// Remove things like quotes
+        /// </summary>
+        protected static string UnescapeNastyCharacters(string cssValue)
+        {
+            return cssValue
+                .Replace("&amp;", "&")
+                .Replace("&#38;", "&")
+                .Replace("&quot;", "\"")
+                .Replace("&#34;", "\"")
+                .Replace("&#39;", "'")
+                .Replace("&apos;", "'");
         }
 
         /// <summary>
@@ -92,7 +116,7 @@ namespace HtmlCleanser
         protected static string CleanUp(string s)
         {
             var temp = s;
-            var r = new Regex("(/\\*(.|[\r\n])*?\\*/)|(//.*)");
+            var r = new Regex("(/\\*(.|[\r\n])*?\\*/)|(//.*)"); //comments
             temp = r.Replace(temp, "");
             temp = temp.Replace("\r", "").Replace("\n", "");
 

@@ -68,7 +68,10 @@ namespace HtmlCleanser
 
         public override string ToString()
         {
-            return string.Join("", Attributes.Select(item => string.Format("{0}: {1};", item.Key, item.Value)));
+            var parts = Attributes
+                .Where(a => !string.IsNullOrWhiteSpace(a.Value))
+                .Select(item => string.Format("{0}: {1};", item.Key, item.Value));
+            return string.Join("", parts);
         }
     }
 }

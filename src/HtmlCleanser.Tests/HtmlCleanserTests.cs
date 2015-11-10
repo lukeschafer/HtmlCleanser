@@ -117,6 +117,20 @@ namespace HtmlCleanser.Tests
             var cleansed = new HtmlCleanser().MoveCssInline(html);
             Assert.AreEqual("<html><head></head><body><p class='test' style=\"color: black;height: 12px;\">a</p></body></html>", cleansed);
         }
+        [Test]
+        public void MoveCssInlineShouldEncodeQuotes()
+        {
+            const string html = @"<html><head><style>div { font-family: ""Times&New'Roman&amp;""; }</style></head><body><div>Foo</div></body></html>";
+            var cleansed = new HtmlCleanser().MoveCssInline(html);
+            Assert.AreEqual(@"<html><head></head><body><div style=""font-family: &quot;times&amp;new&#39;roman&amp;&quot;;"">Foo</div></body></html>", cleansed);
+        }
+        [Test]
+        public void MoveCssInlineShouldHandleEncodedStyleAttribute()
+        {
+            const string html = @"<html><head><style>div { font-family: arial; }</style></head><body><div style=""content:'&amp;'"">Foo</div></body></html>";
+            var cleansed = new HtmlCleanser().MoveCssInline(html);
+            Assert.AreEqual(@"<html><head></head><body><div style=""content: &#39;&amp;&#39;;font-family: arial;"">Foo</div></body></html>", cleansed);
+        }
 
         #endregion
 
