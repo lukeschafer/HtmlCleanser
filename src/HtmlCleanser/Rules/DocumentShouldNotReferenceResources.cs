@@ -13,5 +13,10 @@ namespace HtmlCleanser.Rules
             if (nodes == null) return;
             foreach (var resource in nodes) resource.Remove();
         }
+
+        public string Perform(string htmlInput)
+        {
+            return htmlInput;
+        }
     }
 }

@@ -53,6 +53,11 @@ namespace HtmlCleanser.Rules
             }
         }
 
+        public string Perform(string htmlInput)
+        {
+            return htmlInput;
+        }
+
         protected virtual CssParser GetCssParser()
         {
             return new CssParser();

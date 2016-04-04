@@ -15,5 +15,10 @@ namespace HtmlCleanser.Rules
             foreach (var n in nodes) n.Attributes.Remove("href");
             //TODO: should we match relative URLs in <a /> and prepend the (first) base URL?
         }
+
+        public string Perform(string htmlInput)
+        {
+            return htmlInput;
+        }
     }
 }

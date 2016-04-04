@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using HtmlCleanser.Rules;
 
@@ -10,6 +9,7 @@ namespace HtmlCleanser
     public interface IHtmlCleanserRule
     {
         void Perform(HtmlDocument doc);
+        string Perform(string htmlInput);
     }
 
     public interface IHtmlCleanser
@@ -21,18 +21,23 @@ namespace HtmlCleanser
 
     public class HtmlCleanser : IHtmlCleanser
     {
-        private readonly List<IHtmlCleanserRule> _rules; 
+        private readonly List<IHtmlCleanserRule> _rules;
+
         public HtmlCleanser(params IHtmlCleanserRule[] extraRules)
         {
             _rules = new List<IHtmlCleanserRule>
                 {
-                    new StylesShouldBeInline(), // always first!
+                    new ConditionalCommentsShouldBeIgnored(),
+                    new CommentsShouldBeRemoved(),
+                    new XmlNamespacesShouldBeStripped(),
+                    new StylesShouldBeInline(), // always first HTML Document cleanse rule
                     new DocumentShouldNotReferenceResources(),
                     new TextNodesShouldBeEscaped(),
                     new BaseTagShouldNotHaveHref(),
                 };
             _rules.AddRange(extraRules);
         }
+
         public string CleanseFull(string htmlInput, bool justReturnTheBodyContents = false)
         {
             return Perform(htmlInput, _rules, new Type[] { }, justReturnTheBodyContents);
@@ -51,17 +56,17 @@ namespace HtmlCleanser
         private static string Perform(string htmlInput, IEnumerable<IHtmlCleanserRule> rulesToUse, Type[] rulesToIgnore, bool justReturnTheBodyContents)
         {
             var rulesArray = rulesToUse.ToArray();
+            rulesToIgnore = rulesToIgnore ?? new Type[] { };
+
+            // First, parse the raw HTML to remove things that can't be cleansed as an XML document
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var rule in rulesArray.Where(r => !rulesToIgnore.Any(ignore => ignore.IsInstanceOfType(r))))
+                htmlInput = rule.Perform(htmlInput);
+
             var doc = new HtmlDocument();
-            
-            //we have to remove conditional comments because they totally break stuff. Leave the content
-            var conditionalCommentRegex = new Regex("<!(--)?\\[[^]]*\\](--)?>");
-            htmlInput = conditionalCommentRegex.Replace(htmlInput, "");
-
-            var commentRegex = new Regex("<!--.*?-->", RegexOptions.Singleline);
-            htmlInput = commentRegex.Replace(htmlInput, "");
             doc.LoadHtml(htmlInput);
-            rulesToIgnore = rulesToIgnore ?? new Type[] {};
 
+            // Second, cleanse the XML nodes themselves
             foreach (var rule in rulesArray.Where(r => !rulesToIgnore.Any(ignore => ignore.IsInstanceOfType(r)))) 
                 rule.Perform(doc);
 

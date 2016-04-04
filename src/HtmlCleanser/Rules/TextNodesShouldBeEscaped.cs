@@ -15,5 +15,10 @@ namespace HtmlCleanser.Rules
             foreach (var n in nodes)
                 n.InnerHtml = System.Net.WebUtility.HtmlEncode(System.Net.WebUtility.HtmlDecode(n.InnerHtml));
         }
+
+        public string Perform(string htmlInput)
+        {
+            return htmlInput;
+        }
     }
 }
