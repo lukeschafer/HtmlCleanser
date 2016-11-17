@@ -63,6 +63,14 @@ namespace HtmlCleanser.Tests
             Assert.True(cleansed.Contains("MY MESSAGE"));//just assert pretty much that there were no exceptions
         }
 
+        [Test]
+        public void CleanseFullStylesAttributesShouldHaveValue()
+        {
+            const string html = "<html><body><div name=\"divtagdefaultwrapper\" style=\"font-family:Calibri,Arial,Helvetica,sans-serif; font-size:; margin: 0\"></div></body></html>";
+            var cleansed = new HtmlCleanser(new Rules.StylesAttributesShouldHaveValue()).CleanseFull(html, true);
+            Assert.AreEqual("<div name=\"divtagdefaultwrapper\" style=\"font-family: calibri,arial,helvetica,sans-serif;margin: 0;\"></div>", cleansed);
+        }
+
         #endregion
 
         #region MoveCssInline
