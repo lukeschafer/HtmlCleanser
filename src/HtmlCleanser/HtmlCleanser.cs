@@ -30,6 +30,7 @@ namespace HtmlCleanser
                     new DocumentShouldNotReferenceResources(),
                     new TextNodesShouldBeEscaped(),
                     new BaseTagShouldNotHaveHref(),
+                    new StylesAttributesShouldHaveValue()
                 };
             _rules.AddRange(extraRules);
         }
