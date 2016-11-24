@@ -61,6 +61,7 @@
     <Compile Include="Rules\BaseTagShouldNotHaveHref.cs" />
     <Compile Include="Rules\ConditionalCommentsShouldBeIgnored.cs" />
     <Compile Include="Rules\DocumentShouldNotReferenceResources.cs" />
+    <Compile Include="Rules\RemoveTeletypeTextTags.cs" />
     <Compile Include="Rules\StylesAttributesShouldHaveValue.cs" />
     <Compile Include="Rules\StylesShouldBeInline.cs" />
     <Compile Include="Rules\TextNodesShouldBeEscaped.cs" />
