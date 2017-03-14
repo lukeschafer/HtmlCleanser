@@ -71,6 +71,14 @@ namespace HtmlCleanser.Tests
             Assert.AreEqual("<div name=\"divtagdefaultwrapper\" style=\"font-family: calibri,arial,helvetica,sans-serif;margin: 0;\"></div>", cleansed);
         }
 
+        [Test]
+        public void CleanseFullRemoveTeletypeTextTags()
+        {
+            const string html = @"<html><body><p><tt>test</tt></p></body></html>";
+            var cleansed = new HtmlCleanser(new Rules.RemoveTeletypeTextTags()).CleanseFull(html, true);
+            Assert.AreEqual("<p>test</p>", cleansed);
+        }
+
         #endregion
 
         #region MoveCssInline
