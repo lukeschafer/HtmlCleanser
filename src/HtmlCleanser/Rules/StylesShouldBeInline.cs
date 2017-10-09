@@ -1,8 +1,11 @@
 ﻿using HtmlAgilityPack;
-using HtmlAgilityPack.CssSelectors.NetCore;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+#if USING_NETSTANDARD
+using HtmlAgilityPack.CssSelectors.NetCore;
+#endif
 
 namespace HtmlCleanser.Rules
 {

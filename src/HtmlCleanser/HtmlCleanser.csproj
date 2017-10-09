@@ -1,15 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard1.6;netstandard1.5;net45;net46</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46'">
+    <PackageReference Include="HtmlAgilityPack.CssSelectors" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.5' OR '$(TargetFramework)'=='netstandard1.6' OR '$(TargetFramework)'=='netstandard2.0'">
     <PackageReference Include="HtmlAgilityPack.CssSelectors.NetCore" Version="1.0.0" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.5' OR '$(TargetFramework)'=='netstandard1.6' OR '$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>USING_NETSTANDARD</DefineConstants>
+  </PropertyGroup>
 
 </Project>
