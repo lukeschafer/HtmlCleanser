@@ -157,3 +157,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 src/\.vs/HtmlCleanser/v15/sqlite3/
+
+src/\.vs/HtmlCleanser/v15/Server/sqlite3/

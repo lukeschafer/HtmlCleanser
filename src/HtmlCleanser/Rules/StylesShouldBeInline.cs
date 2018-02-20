@@ -1,8 +1,11 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Fizzler.Systems.HtmlAgilityPack;
-using HtmlAgilityPack;
+
+#if USING_NETSTANDARD
+using HtmlAgilityPack.CssSelectors.NetCore;
+#endif
 
 namespace HtmlCleanser.Rules
 {
@@ -19,7 +22,7 @@ namespace HtmlCleanser.Rules
             var styles = doc.DocumentNode.SelectNodes("//style") ?? new HtmlNodeCollection(doc.DocumentNode);
             foreach (var style in styles.Reverse())
             {
-                if (style.Attributes["id"] != null && !string.IsNullOrWhiteSpace(style.Attributes["id"].Value) && style.Attributes["id"].Value.Equals("mobile", StringComparison.InvariantCultureIgnoreCase))
+                if (style.Attributes["id"] != null && !string.IsNullOrWhiteSpace(style.Attributes["id"].Value) && style.Attributes["id"].Value.Equals("mobile", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }

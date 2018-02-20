@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using HtmlCleanser.Rules;
+using System.Reflection;
 
 namespace HtmlCleanser
 {
@@ -63,7 +64,7 @@ namespace HtmlCleanser
             doc.LoadHtml(htmlInput);
             rulesToIgnore = rulesToIgnore ?? new Type[] {};
 
-            foreach (var rule in rulesArray.Where(r => !rulesToIgnore.Any(ignore => ignore.IsInstanceOfType(r)))) 
+            foreach (var rule in rulesArray.Where(r => !rulesToIgnore.Any(ignore => ignore.GetTypeInfo().IsInstanceOfType(r)))) 
                 rule.Perform(doc);
 
             var htmlText = justReturnTheBodyContents ?  doc.DocumentNode.SelectSingleNode("//body").InnerHtml : doc.DocumentNode.OuterHtml;
