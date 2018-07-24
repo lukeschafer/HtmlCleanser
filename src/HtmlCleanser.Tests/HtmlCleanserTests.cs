@@ -32,6 +32,22 @@ namespace HtmlCleanser.Tests
         }
 
         [Test]
+        public void CleanseFullShouldDealWithPsuedoSelectors()
+        {
+            const string html = @"<html><body><style>p:hover{color:red;} p:last-child{font-weight:bold;}</style><p>asd</p></body></html>";
+            var cleansed = new HtmlCleanser().CleanseFull(html);
+            Assert.AreEqual("<html><body><p style=\"font-weight: bold;\">asd</p></body></html>", cleansed);
+        }
+
+        [Test]
+        public void CleanseFullShouldNotInlineFlaggedStyleTags()
+        {
+            const string html = @"<html><body><style noinline>p:hover{color:red;}</style><p>asd</p></body></html>";
+            var cleansed = new HtmlCleanser().CleanseFull(html);
+            Assert.AreEqual("<html><body><style noinline=\"\">p:hover{color:red;}</style><p>asd</p></body></html>", cleansed);
+        }
+
+        [Test]
         public void CleanseFullShouldNotDieForBaseTagWithNoHref()
         {
             const string html = @"<html><body><base></body></html>";

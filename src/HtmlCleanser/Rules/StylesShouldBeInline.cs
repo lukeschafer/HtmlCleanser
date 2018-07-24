@@ -16,12 +16,14 @@ namespace HtmlCleanser.Rules
     public class StylesShouldBeInline : IHtmlCleanserRule
     {
         private readonly Regex _mediaregex = new Regex("[@]media\\s+([^{ ]+)\\s*[{]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private readonly Regex _validPsuedoClassRegex = new Regex(":(?!nth-child|first-child|last-child|not)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public void Perform(HtmlDocument doc)
         {
             var styles = doc.DocumentNode.SelectNodes("//style") ?? new HtmlNodeCollection(doc.DocumentNode);
             foreach (var style in styles.Reverse())
             {
+                if (style.Attributes["noinline"] != null) continue;
                 if (style.Attributes["id"] != null && !string.IsNullOrWhiteSpace(style.Attributes["id"].Value) && style.Attributes["id"].Value.Equals("mobile", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
@@ -34,6 +36,8 @@ namespace HtmlCleanser.Rules
 
                 foreach (var item in cssParser.Styles.Reverse())
                 {
+                    if (IsInvalidPsuedoSelector(item.Value)) continue;
+
                     var styleClassCss = new StyleClass(item.Value);
 
                     foreach (var element in doc.DocumentNode.QuerySelectorAll(styleClassCss.Selector))
@@ -54,6 +58,11 @@ namespace HtmlCleanser.Rules
 
                 style.Remove();
             }
+        }
+
+        private bool IsInvalidPsuedoSelector(StyleClass style)
+        {
+            return _validPsuedoClassRegex.IsMatch(style.Selector);
         }
 
         protected virtual CssParser GetCssParser()
