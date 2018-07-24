@@ -36,6 +36,8 @@ Args:
 What it does: 
 * Removes Conditional Comments (leaving content)
 * Inlines CSS from included stylesheets to the style tag of each node. Applies 'all' and 'screen' media queries
+* Inlines psuedo classes `first-child,last-child,nth-child,not` and ignores the rest
+* *Ignores* any stylesheet with `id=mobile` or `noinline` attribute
 * Removes External Resource References (stylesheets, javascript etc)
 * Fixes unescaped text in nodes. This could actually cause problems, but it tries to fix them and will more likely fix things than break them (famous last words)
 * Removes 'href' from \<base/\> tag
@@ -53,6 +55,8 @@ Args:
 What it does: 
 * Removes Conditional Comments (leaving content)
 * Inlines CSS from included stylesheets to the style tag of each node. Applies 'all' and 'screen' media queries
+* Inlines psuedo classes `first-child,last-child,nth-child,not` and ignores the rest
+* *Ignores* any stylesheet with `id=mobile` or `noinline` attribute
 
 ### PartialCleanse
 
