@@ -18,6 +18,7 @@ namespace HtmlCleanser
         string CleanseFull(string htmlInput, bool justReturnTheBodyContents = false);
         string PartialCleanse(string htmlInput, bool justReturnTheBodyContents = false, params Type[] rulesToIgnore);
         string MoveCssInline(string htmlInput, bool justReturnTheBodyContents = false);
+        string Perform(string htmlInput, IEnumerable<IHtmlCleanserRule> rulesToUse, bool justReturnTheBodyContents);
     }
 
     public class HtmlCleanser : IHtmlCleanser
@@ -37,20 +38,21 @@ namespace HtmlCleanser
         }
         public string CleanseFull(string htmlInput, bool justReturnTheBodyContents = false)
         {
-            return Perform(htmlInput, _rules, new Type[] { }, justReturnTheBodyContents);
+            return Perform(htmlInput, _rules, justReturnTheBodyContents);
         }
 
         public string PartialCleanse(string htmlInput, bool justReturnTheBodyContents = false, params Type[] rulesToIgnore)
         {
-            return Perform(htmlInput, _rules, rulesToIgnore, justReturnTheBodyContents);
+            var ruleSet = _rules.Where(r => !rulesToIgnore.Any(ignore => ignore.GetTypeInfo().IsInstanceOfType(r)));
+            return Perform(htmlInput, ruleSet, justReturnTheBodyContents);
         }
 
         public string MoveCssInline(string htmlInput, bool justReturnTheBodyContents = false)
         {
-            return Perform(htmlInput, new IHtmlCleanserRule[] { new StylesShouldBeInline() }, new Type[] { }, justReturnTheBodyContents);
+            return Perform(htmlInput, new IHtmlCleanserRule[] { new StylesShouldBeInline() }, justReturnTheBodyContents);
         }
 
-        private static string Perform(string htmlInput, IEnumerable<IHtmlCleanserRule> rulesToUse, Type[] rulesToIgnore, bool justReturnTheBodyContents)
+        public string Perform(string htmlInput, IEnumerable<IHtmlCleanserRule> rulesToUse, bool justReturnTheBodyContents)
         {
             var rulesArray = rulesToUse.ToArray();
             var doc = new HtmlDocument();
@@ -62,9 +64,8 @@ namespace HtmlCleanser
             var commentRegex = new Regex("<!--.*?-->", RegexOptions.Singleline);
             htmlInput = commentRegex.Replace(htmlInput, "");
             doc.LoadHtml(htmlInput);
-            rulesToIgnore = rulesToIgnore ?? new Type[] {};
 
-            foreach (var rule in rulesArray.Where(r => !rulesToIgnore.Any(ignore => ignore.GetTypeInfo().IsInstanceOfType(r)))) 
+            foreach (var rule in rulesArray) 
                 rule.Perform(doc);
 
             var htmlText = justReturnTheBodyContents ?  doc.DocumentNode.SelectSingleNode("//body").InnerHtml : doc.DocumentNode.OuterHtml;
